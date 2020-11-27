@@ -1,0 +1,43 @@
+model{
+	# sampling model
+	for(j in 1:Ncohorts){
+		lin[j] <- theta[1] + exp(theta[2])*log(doseH[j]/dRef)
+		logit(pTox[j]) <- lin[j]
+		NtoxH[j] ~ dbin(pTox[j], NsubH[j])
+	}
+	
+	for(i in 1:MdoseH){
+		lin.star[i] <- theta[1] + exp(theta[2])*log(doseH[i]/dRef)
+		logit(pTox.star[i]) <- lin.star[i]
+		
+		pCat[i, 1] <- step(pTox.cut[1] - pTox.star[i])
+		pCat[i, 2] <- step(pTox.cut[2] - pTox.star[i])
+		                  - step(pTox.cut[1] - pTox.star[i])
+		pCat[i, 3] <- step(1 - pTox.star[i]) - step(pTox.cut[2] - pTox.star[i])	
+	}
+
+
+		theta[1:2] ~ dmnorm(thetaMu[which, 1:2], thetaPrec[which, 1:2, 1:2])
+		which ~ dcat(wMix[1:2])
+		# to monitor the exchangeability probability
+		# in the course of the new human trial
+			for(k in 1:2){
+				prob.ex[k] <- equals(which, k)
+			}
+
+			
+			thetaMu[1, 1:2] ~ dmnorm(PriorA[1:2], thetaPrec[1, 1:2, 1:2])
+			cov.A[1, 1] <- PriorA[3]
+			cov.A[1, 2] <- PriorA[4]
+			cov.A[2, 1] <- cov.A[1, 2]
+			cov.A[2, 2] <- PriorA[5]
+			thetaPrec[1, 1:2, 1:2] <- inverse(cov.A[1:2, 1:2])
+
+
+			thetaMu[2, 1:2] ~ dmnorm(Prior.mw[1:2], thetaPrec[2, 1:2, 1:2])
+			cov.rb[1, 1] <- pow(Prior.sw[1], 2)
+			cov.rb[2, 2] <- pow(Prior.sw[2], 2)
+			cov.rb[1, 2] <- Prior.sw[1]*Prior.sw[2]*Prior.corr
+			cov.rb[2, 1] <- cov.rb[1, 2]
+			thetaPrec[2, 1:2, 1:2] <- inverse(cov.rb[1:2, 1:2])
+}
