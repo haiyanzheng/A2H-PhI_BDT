@@ -4,7 +4,7 @@ Article: Zheng, H, Hampson, LV. A Bayesian decision‐theoretic approach to inco
 
 Author responsible for writing the code: Dr Haiyan Zheng.
 
-E-mail of the author maintaining the code: haiyan.zheng@newcastle.ac.uk
+E-mail of the author maintaining the code: haiyan.zheng@mrc-bsu.cam.ac.uk
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 * Content of the folder
